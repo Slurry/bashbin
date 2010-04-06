@@ -1,0 +1,26 @@
+#!/bin/bash
+# Send changes in ip address to appropriate people
+
+ipfile="/home/jayson/currentip_file.txt"
+nowip=$(dig jwmlt2 +short)
+
+function sendip {
+    sendEmail -f williams.jayson@gmail.com -t jaysonfwilliams@yahoo.com jwilli7@amerigroupcorp.com treasurethebox37@hotmail.com -u "ipstatus report" -s smtp.gmail.com:587 -xu williams.jayson -xp Life10l29i38f47e -m ipchange -a "/home/jayson/currentip_file.txt" 
+scp -P 22 /home/jayson/currentip_file.txt root@192.168.1.33:/home/user
+}
+
+if [ ! -e $ipfile ]; then
+    echo $nowip > "/home/jayson/currentip_file.txt"
+    sendip
+else
+    lastip=$(cat /home/jayson/currentip_file.txt)
+    if [ "$nowip" = "$lastip" ]; then
+	echo $nowip NO CHANGE
+    else
+	echo ip changed from $lastip to $nowip
+	echo $nowip > /home/jayson/currentip_file.txt
+	sendip
+    fi
+
+
+fi

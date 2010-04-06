@@ -1,0 +1,10 @@
+#!/bin/bash
+
+apart='RTSP://dssushi.mobitv.com:554/39f28/'
+bpart='-EVDOQVGA.sdp'
+
+select chan in [$(cat ./mobitv-chanlist)];
+do
+echo you picked $chan
+break;
+done

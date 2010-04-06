@@ -1,0 +1,13 @@
+#!/bin/bash
+
+apart='RTSP://dssushi.mobitv.com:554/39f28/'
+bpart='-EVDOQVGA.sdp'
+
+select chan in $(cat ~/bashbin/mobiview/mobitv-chanlist);
+do
+if [ $REPLY = 'quit' ]; then
+    echo '...bye';
+    break;
+fi
+vlc $apart$REPLY$bpart
+done

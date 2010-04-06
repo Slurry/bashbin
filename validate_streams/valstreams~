@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Companion script for streams.db project
+# parse through unvalidated streams 
+# 2010 March 1
+# by Jayson Williams
+
+while [ 1 ]; do
+stream=$(sqlite3 ~/streams/streamtest.db \
+"select min(url) from streams
+ where validated = 'f';" |sed '1d')
+streamname=$(sqlite3 ~/streams/streamtest.db \
+"select name,min(url) from streams
+ where validated = 'f';" |sed '1d' |sed 's|\|http.*||')
+mplayer "$stream"
+echo '-------------------------------'
+echo "Is this a valid stream?:"
+echo $stream
+read valid
+
+if [ -z $valid ]; then
+    valid='skip'
+fi
+
+if [ $valid = 'n' ]; then
+   ( sqlite3 ~/streams/streamtest.db \
+       "update streams set validated = '0' where url = '$stream';");
+   elif [ $valid = 'y' ]; then
+    echo '--------------------------------'
+    echo "Stream Name (return for $streamname):"
+    read name
+    if [ -z $name ]; then
+	name=streamname
+    fi
+    
+    echo $genres
+    read genre
+    ( sqlite3 ~/streams/streamtest.db \
+	"update streams set validated = '1', name = '"$name"', genre_id = '"$genre"'  where url = '$stream';");
+fi
+
+done

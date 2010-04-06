@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Statistics on files received
+echo Dupe Tracks $(ls /home/jayson/Music/last.fm/incomplete/ |wc -l)
+if [ $(ls /home/jayson/Music/last.fm/incomplete |wc -l) -gt 5 ]; then
+    find /home/jayson/Music/last.fm/incomplete/  -mmin +1 -exec rm {} ';'
+fi
+totalfiles=$(ls ~/Music/last.fm/ | wc -l)
+totaltoday=$(find ~/Music/last.fm -daystart -maxdepth 1 -ctime 0 | wc -l)
+nowgetting=$(ls -t /home/jayson/Music/last.fm/incomplete/ |  sed -e '2,100d')
+rptgetting=$(ls -tsh /home/jayson/Music/last.fm/incomplete/ | sed -e '1d'  -e '3,100d')
+find=$(find /home/jayson/Music/last.fm/incomplete/ -mmin -1 )
+
+#nowgetting=$(ls -1sh "$find" |  sed -e 's|/home/jayson/Music/last.fm/incomplete/||')
+#dupetest=$("ls $find" |  sed -e 's|/home/jayson/Music/last.fm/incomplete/||')
+dupetest='/home/jayson/Music/last.fm/'"$nowgetting" 
+
+echo Musicstats
+echo -----------------
+echo Total files - $totalfiles
+echo Total today - $totaltoday
+echo Now Getting - $rptgetting
+if [ -a "$dupetest" ]; then
+    echo 'Dupe Check --> True' 
+    else echo 'Dupe Check --> False'
+fi
+echo -------------------------
+echo Most Recent
+echo -------------------------
+ls -gloh -t --ignore='incomplete' ~/Music/last.fm/ | head -n11 | sed -e 's|-rw-r--r-- 1 ||'

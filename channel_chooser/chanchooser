@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#navigate through streams stored in streamtest.db porject
+
+select mode in Flip Pick Exit; do
+
+    echo $mode
+    if [ $mode = 'Flip' ]; then
+	#get channel list
+	chan=($(sqlite3 ~/streams/streamtest.db \
+	    "select rowid from streams where validated = 1;" \
+	    |sed '1d'))
+	for i in {1..${chan[@]}; do
+
+	   sqlite3 ~/streams/streamtest.db "select url from streams where rowid = ${chan[i]};" | sed '1d'
+	done
+    fi
+
+done

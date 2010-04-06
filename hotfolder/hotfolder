@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# is nokia reachable
+echo Hotfolder monitor to jwmn810 media-hotfolder$'\n'
+n810_visible=$(ping -c1 jwmn810|grep '1 packet'|sed 's|1 packets transmitted\, ||'|sed -e 's| received.*||')
+
+if [ $n810_visible -eq '0'  ]; then
+    echo jwmn810 is not visible;
+    else
+    echo jwmn810 is visible;
+    sleep 5
+    # is there anything in media-hotfolder
+    hotfolder_full=$(ls ~/media-hotfolder|wc -l)
+    if [ $hotfolder_full -eq '1' ]; then
+	echo hotfolder is empty
+	else
+	echo hotfolder is full
+	sleep 5
+	rsync --rsh='ssh -p22' -Lvt /home/jayson/media-hotfolder/* \
+	    root@jwmn810:/home/user/hotfolder/
+	#rsync -Lvt ~/media-hotfolder/* ~/bashbin/hotfolder/
+    fi
+#    mv ~/media-hotfolder/*.* ~/media-hotfolder/done
+fi

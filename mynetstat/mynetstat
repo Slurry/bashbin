@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#report status on known network
+echo Local network status.$'\n'
+jwmlt1=$(ping -c1 jwmlt1 |grep transmitted| \
+sed -e 's|1 packets transmitted, ||' \
+-e 's|received.*||')
+
+if [ $jwmlt1 -eq '1' ]; then
+    jwmlt1=UP
+    else
+    jwmlt1=DOWN
+fi
+
+jwmlt2=$(ping -c1 jwmlt2 |grep transmitted| \
+sed -e 's|1 packets transmitted, ||' \
+-e 's|received.*||')
+
+if [ $jwmlt2 -eq '1' ]; then
+    jwmlt2=UP
+    else
+    jwmlt1=DOWN
+fi
+
+jwmdt1=$(ping -c1 jwmdt1 |grep transmitted| \
+sed -e 's|1 packets transmitted, ||' \
+-e 's|received.*||')
+
+if [ $jwmdt1 -eq '1' ]; then
+    jwmdt1=UP
+    else
+    jwmlt1=DOWN
+fi
+
+jwmn810=$(ping -c1 jwmn810 |grep transmitted| \
+sed -e 's|1 packets transmitted, ||' \
+-e 's|received.*||')
+
+if [ $jwmn810 -eq '1' ]; then
+    jwmn810=UP
+    else
+    jwmn810=DOWN
+fi
+
+echo Box$'\t\t'Status
+echo ______________________
+echo jwmlt1$'\t\t'$jwmlt1
+echo jwmlt2$'\t\t'$jwmlt2
+echo jwmdt1$'\t\t'$jwmdt1
+echo jwmn810$'\t\t'$jwmn810
